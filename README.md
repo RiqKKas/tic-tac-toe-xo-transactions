@@ -28,12 +28,61 @@
 
 ```bash
 # Clone o repositório
-git clone https://github.com/the-riquelme/contact-list.git
+git clone git@github.com:the-riquelme/tic-tac-toe-xo-transactions.git
 
 # Suba os containers
-docker compose up -d
+docker compose -f docker/sawtooth-default.yaml up
 
-# Acesse o servidor em: http://localhost:3000
+# Entrar no bash do container principal de execucao:
+docker exec -it sawtooth-shell-default bash
+
+# Crie chaves para dois jogadores jogarem:
+sawtooth keygen jack
+sawtooth keygen jill
+
+# Crie um jogo chamado my-game para dois jogadores passando p jogador 1:
+xo create my-game --username jack --url http://rest-api:8008
+
+# Este diagrama mostra o número de cada espaço no jogo da velha.
+ 1 | 2 | 3
+---|---|---
+ 4 | 5 | 6
+---|---|---
+ 7 | 8 | 9
+
+# Jogue com o Jogador 1
+xo take my-game 5 --username jack --url http://rest-api:8008
+
+# Jogue com o Jogador 2
+xo take my-game 1 --username jill --url http://rest-api:8008
+
+# Mostrar o tabuleiro de jogo atual
+xo show my-game --url http://rest-api:8008
+GAME:     : my-game
+PLAYER 1  : 02403a
+PLAYER 2  : 03729b
+STATE     : P1-NEXT
+
+  O |   |
+ ---|---|---
+    | X |
+ ---|---|---
+    |   |
+
+# Vencedor
+GAME:     : my-game
+PLAYER 1  : 0279e5
+PLAYER 2  : 03b245
+STATE     : P1-WIN
+
+  O | O |  
+ ---|---|---
+  X | X | X
+ ---|---|---
+    |   |  
+
+# Exclua o jogo
+xo delete my-game --url http://rest-api:8008
 ```
 
 ---
